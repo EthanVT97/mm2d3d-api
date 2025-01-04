@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: mm2d3d-api
+    env: php
+    buildCommand: composer install
+    startCommand: php -S 0.0.0.0:$PORT start.php
+    envVars:
+      - key: SUPABASE_URL
+        value: https://jaubdheyosmukdxvctbq.supabase.co
+      - key: SUPABASE_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://ethanvt97.github.io
