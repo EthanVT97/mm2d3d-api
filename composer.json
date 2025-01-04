@@ -5,8 +5,7 @@
     "require": {
         "php": "^8.0",
         "vlucas/phpdotenv": "^5.5",
-        "firebase/php-jwt": "^6.4",
-        "cors-php/cors": "^1.0"
+        "firebase/php-jwt": "^6.4"
     },
     "autoload": {
         "psr-4": {

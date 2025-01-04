@@ -1,19 +1,43 @@
 <?php
-header('Access-Control-Allow-Origin: https://ethanvt97.github.io');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-header('Access-Control-Allow-Credentials: true');
+// Allow from any origin
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    $allowedOrigins = [
+        'https://ethanvt97.github.io',
+        'http://localhost:5500',
+        'http://127.0.0.1:5500'
+    ];
+    
+    $origin = $_SERVER['HTTP_ORIGIN'];
+    if (in_array($origin, $allowedOrigins)) {
+        header("Access-Control-Allow-Origin: $origin");
+        header('Access-Control-Allow-Credentials: true');
+    }
+}
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
+// Access-Control headers are received during OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    }
+
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+        header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+    }
+
+    exit(0);
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// Load environment variables
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// Load environment variables if .env exists
+if (file_exists(__DIR__ . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+}
+
+// Set default values if environment variables are not set
+$_ENV['SUPABASE_URL'] = $_ENV['SUPABASE_URL'] ?? 'https://jaubdheyosmukdxvctbq.supabase.co';
+$_ENV['FRONTEND_URL'] = $_ENV['FRONTEND_URL'] ?? 'https://ethanvt97.github.io';
 
 // Parse the URL
 $request_uri = $_SERVER['REQUEST_URI'];
